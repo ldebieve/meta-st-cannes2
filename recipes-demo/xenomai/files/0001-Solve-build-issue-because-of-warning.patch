@@ -1,0 +1,31 @@
+From 11b41af47ec5d00d8e3e5e0823ad0825332a79a8 Mon Sep 17 00:00:00 2001
+From: Lionel Debieve <lionel.debieve@st.com>
+Date: Mon, 3 Apr 2017 11:02:24 +0200
+Subject: [PATCH 1/1] Solve build issue because of warning
+
+Link to non initialized value for the stop variable.
+
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+---
+ demo/posix/cyclictest/cyclictest.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/demo/posix/cyclictest/cyclictest.c b/demo/posix/cyclictest/cyclictest.c
+index 3bb4386..5fc454e 100644
+--- a/demo/posix/cyclictest/cyclictest.c
++++ b/demo/posix/cyclictest/cyclictest.c
+@@ -832,8 +832,10 @@ void *timerthread(void *param)
+ 	next.tv_nsec += interval.tv_nsec;
+ 	tsnorm(&next);
+ 
++	memset(&stop, 0, sizeof(stop)); /* grrr */
++
+ 	if (duration) {
+-		memset(&stop, 0, sizeof(stop)); /* grrr */
++//		memset(&stop, 0, sizeof(stop)); /* grrr */
+ 		stop = now;
+ 		stop.tv_sec += duration;
+ 	}
+-- 
+2.7.4
+

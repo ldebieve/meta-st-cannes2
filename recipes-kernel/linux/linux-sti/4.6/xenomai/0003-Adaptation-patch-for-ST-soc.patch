@@ -1,0 +1,76 @@
+From 4dab840c6c6a4fb00502864df94499fffd9f265d Mon Sep 17 00:00:00 2001
+From: Lionel Debieve <lionel.debieve@st.com>
+Date: Fri, 31 Mar 2017 10:14:07 +0200
+Subject: [PATCH 3/4] Adaptation patch for ST soc
+
+Change-Id: I56fdf2572b27a797c42260bfd17234c5f4847796
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+---
+ arch/arm/boot/dts/stih407-family.dtsi | 9 +++++++++
+ arch/arm/mach-sti/Kconfig             | 2 ++
+ drivers/pinctrl/pinctrl-st.c          | 3 ++-
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index d0eaee0..54a7d1c 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -46,6 +46,15 @@
+ 		reg = <0x08760000 0x1000>;
+ 	};
+ 
++        timer@08760600 {
++                interrupt-parent = <&intc>;
++                compatible = "arm,cortex-a9-twd-timer";
++                reg = <0x08760600 0x100>;
++                interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++                clocks = <&arm_periph_clk>;
++        };
++
++
+ 	timer@08760200 {
+ 		interrupt-parent = <&intc>;
+ 		compatible = "arm,cortex-a9-global-timer";
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index a196d14..4a56618 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -10,12 +10,14 @@ menuconfig ARCH_STI
+ 	select MFD_SYSCON
+ 	select ARCH_HAS_RESET_CONTROLLER
+ 	select HAVE_ARM_SCU if SMP
++	select HAVE_ARM_TWD if SMP
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_ERRATA_754322
+ 	select ARM_ERRATA_764369 if SMP
+ 	select ARM_ERRATA_775420
+ 	select PL310_ERRATA_753970 if CACHE_L2X0
+ 	select PL310_ERRATA_769419 if CACHE_L2X0
++	select IPIPE_ARM_KUSER_TSC if IPIPE
+ 	select RESET_CONTROLLER
+ 	help
+ 	  Include support for STiH41x SOCs like STiH415/416 using the device tree
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index cab66c6..9273e41 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -23,6 +23,7 @@
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/platform_device.h>
++#include <linux/ipipe.h>
+ #include "core.h"
+ 
+ /* PIO Block registers */
+@@ -1443,7 +1444,7 @@ static void __gpio_irq_handler(struct st_gpio_bank *bank)
+ 					continue;
+ 			}
+ 
+-			generic_handle_irq(irq_find_mapping(bank->gpio_chip.irqdomain, n));
++			ipipe_handle_demuxed_irq(irq_find_mapping(bank->gpio_chip.irqdomain, n));
+ 		}
+ 	}
+ }
+-- 
+2.7.4
+

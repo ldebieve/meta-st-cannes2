@@ -12,7 +12,7 @@ BACKEND="multi"
 PV_MALI ="r6p1"
 PR_MALI ="01rel0"
 
-COMPATIBLE_MACHINE = "stih410-b2260"
+COMPATIBLE_MACHINE = "stih410-b2260|st-xenomai"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 #PROVIDES += "mali400-userland virtual/libgles1 virtual/libgles2 virtual/egl virtual/libvg virtual/gbm virtual/mesa"

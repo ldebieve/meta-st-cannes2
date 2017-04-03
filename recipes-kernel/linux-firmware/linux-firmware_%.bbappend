@@ -2,5 +2,6 @@
 # by default the firmware: rtl_bt/rtl8723b_fw.bin
 
 PACKAGES_prepend_stih410-b2260 = " ${PN}-rtl8723bu "
+PACKAGES_prepend_st-xenomai = " ${PN}-rtl8723bu "
 
 FILES_${PN}-rtl8723bu = " /lib/firmware/rtl_bt/rtl8723b_fw.bin "

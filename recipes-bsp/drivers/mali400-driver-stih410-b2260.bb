@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6f900d9bafc8f178413b0fb082e76ce5"
 
 inherit module
 
-COMPATIBLE_MACHINE = "stih410-b2260"
+COMPATIBLE_MACHINE = "stih410-b2260|st-xenomai"
 
 DEPENDS = "virtual/kernel"
 

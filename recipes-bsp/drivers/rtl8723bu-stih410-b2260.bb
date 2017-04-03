@@ -16,7 +16,7 @@ SRC_URI =+ "file://0001-ARM-Support.patch \
             "
 
 DEPENDS = "virtual/kernel"
-COMPATIBLE_MACHINE = "stih410-b2260"
+COMPATIBLE_MACHINE = "stih410-b2260|st-xenomai"
 
 inherit module
 
